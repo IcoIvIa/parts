@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h2>仮の検索欄</h2>
+    <input type="text" name="" value="検索できません。ボタンのクリックイベントをJSで取得">
+    <br>
+    <input type="submit" value="検索" id="Searchbutton">
+
+    <h2>仮の登録フォーム</h2>
+
+    <div>タイトル :<input type="text" name="" id="" data-suggestion="title"></div>
+
+    <div>ISBN :<input type="text" name="" id="" data-suggestion="isbn"></div>
+
+    <div>著者 :<input type="text" name="" id="" data-suggestion="author"></div>
+
+    <h3>仮の検索結果(JSの配列にあると仮定)</h3>
+    <p>星の王子さま</p>
+    <p>9784〜</p>
+    <p>サンテグジュペリ</p>
+
+</body>
+
+<script>
+    "use strict";
+    const dummySearchResults = [
+        {
+            title: "星の王子さま",
+            isbn: "9784〜",
+            author: "サンテグジュペリ"
+        }
+    ];
+
+
+    document.getElementById('Searchbutton').addEventListener('click', () => {
+
+        document.querySelectorAll('input[data-suggestion]').forEach(input => {
+            input.value = "";
+        });
+
+        for (const key in dummySearchResults[0]) {
+            console.log(key);
+            console.log(dummySearchResults[0][key]);
+
+            document.querySelector(`input[data-suggestion="${key}"]`).value = dummySearchResults[0][key];
+        }
+    })
+</script>
+
+</html>
