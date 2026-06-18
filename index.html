@@ -23,9 +23,16 @@
     <div>著者 :<input type="text" name="" id="" data-suggestion="author"></div>
 
     <h3>仮の検索結果(JSの配列にあると仮定)</h3>
-    <p>星の王子さま</p>
-    <p>9784〜</p>
-    <p>サンテグジュペリ</p>
+
+    <pre>
+    const dummySearchResults = [
+    {
+        title: "星の王子さま",
+        isbn: "9784〜",
+        author: "サンテグジュペリ"
+    }
+    ];
+    </pre>
 
 </body>
 
@@ -47,8 +54,8 @@
         });
 
         for (const key in dummySearchResults[0]) {
-            console.log(key);
-            console.log(dummySearchResults[0][key]);
+            // console.log(key);
+            // console.log(dummySearchResults[0][key]);
 
             document.querySelector(`input[data-suggestion="${key}"]`).value = dummySearchResults[0][key];
         }
