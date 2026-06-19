@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h2>仮の検索欄</h2>
+    <input type="text" name="" value="" id="searchInput">
+    <ul id="suggestions"></ul>
+    <br>
+    <input type="submit" value="検索" id="searchbutton">
+
+    <h2>仮の登録フォーム</h2>
+
+    <div>タイトル :<input type="text" name="" id="" data-suggestion="title"></div>
+
+    <div>ISBN :<input type="text" name="" id="" data-suggestion="isbn"></div>
+
+    <div>著者 :<input type="text" name="" id="" data-suggestion="author"></div>
+
+
+    <script src="/config.js"></script>
+    <script>
+        "use strict";
+
+        // 設計用ダミーデーターーーーーーーーーーーーーーーー
+        const dummyData = {
+            kind: "books#volumes",
+            totalItems: 5,
+            items: [
+                {
+                    kind: "books#volume",
+                    id: "book001",
+                    etag: "dummy001",
+                    selfLink: "https://example.com/books/book001",
+                    volumeInfo: {
+                        title: "PHP入門ガイド",
+                        authors: ["山田 太郎"],
+                        publisher: "サンプル出版",
+                        publishedDate: "2024-01-15",
+                        description: "PHPの基礎を学ぶための入門書です。",
+                        industryIdentifiers: [
+                            {
+                                type: "ISBN_13",
+                                identifier: "9784000000001"
+                            }
+                        ],
+                        pageCount: 320,
+                        printType: "BOOK",
+                        categories: ["Programming"],
+                        language: "ja",
+                        imageLinks: {
+                            thumbnail: "https://picsum.photos/128/192?random=1"
+                        }
+                    }
+                },
+                {
+                    kind: "books#volume",
+                    id: "book002",
+                    etag: "dummy002",
+                    selfLink: "https://example.com/books/book002",
+                    volumeInfo: {
+                        title: "JavaScript実践講座",
+                        authors: ["佐藤 花子"],
+                        publisher: "テックブックス",
+                        publishedDate: "2023-10-01",
+                        description: "JavaScriptを使ったWeb開発を学べます。",
+                        industryIdentifiers: [
+                            {
+                                type: "ISBN_13",
+                                identifier: "9784000000002"
+                            }
+                        ],
+                        pageCount: 410,
+                        printType: "BOOK",
+                        categories: ["Programming"],
+                        language: "ja",
+                        imageLinks: {
+                            thumbnail: "https://picsum.photos/128/192?random=2"
+                        }
+                    }
+                },
+                {
+                    kind: "books#volume",
+                    id: "book003",
+                    etag: "dummy003",
+                    selfLink: "https://example.com/books/book003",
+                    volumeInfo: {
+                        title: "PythonではじめるAI",
+                        authors: ["鈴木 一郎"],
+                        publisher: "未来出版",
+                        publishedDate: "2025-02-20",
+                        description: "AI開発の基礎を学べます。",
+                        industryIdentifiers: [
+                            {
+                                type: "ISBN_13",
+                                identifier: "9784000000003"
+                            }
+                        ],
+                        pageCount: 512,
+                        printType: "BOOK",
+                        categories: ["Artificial Intelligence"],
+                        language: "ja",
+                        imageLinks: {
+                            thumbnail: "https://picsum.photos/128/192?random=3"
+                        }
+                    }
+                },
+                {
+                    kind: "books#volume",
+                    id: "book004",
+                    etag: "dummy004",
+                    selfLink: "https://example.com/books/book004",
+                    volumeInfo: {
+                        title: "データベース設計入門",
+                        authors: ["高橋 健"],
+                        publisher: "システム出版",
+                        publishedDate: "2022-08-18",
+                        description: "データベース設計を基礎から解説。",
+                        industryIdentifiers: [
+                            {
+                                type: "ISBN_13",
+                                identifier: "9784000000004"
+                            }
+                        ],
+                        pageCount: 280,
+                        printType: "BOOK",
+                        categories: ["Database"],
+                        language: "ja",
+                        imageLinks: {
+                            thumbnail: "https://picsum.photos/128/192?random=4"
+                        }
+                    }
+                },
+                {
+                    kind: "books#volume",
+                    id: "book005",
+                    etag: "dummy005",
+                    selfLink: "https://example.com/books/book005",
+                    volumeInfo: {
+                        title: "Reactフロントエンド開発",
+                        authors: ["田中 美咲"],
+                        publisher: "Web技術社",
+                        publishedDate: "2025-04-12",
+                        description: "ReactによるモダンWeb開発。",
+                        industryIdentifiers: [
+                            {
+                                type: "ISBN_13",
+                                identifier: "9784000000005"
+                            }
+                        ],
+                        pageCount: 360,
+                        printType: "BOOK",
+                        categories: ["Web Development"],
+                        language: "ja",
+                        imageLinks: {
+                            thumbnail: "https://picsum.photos/128/192?random=5"
+                        }
+                    }
+                }
+            ]
+        };
+        // -----－ダミーデータここまでーーーーーーーーーーーーーーーーー
+
+
+        // 以下サジェスト表示ーーーーーーーーーーーーーーーーーーーーーーー
+        const searchInputEvent = document.getElementById('searchInput');
+        // サジェスト表示の欄が必要
+        const maxSuggestionResults = 2;
+        const setDebounceTime = 1000;
+        let debounceTimer;
+
+        const suggestionArea = document.getElementById("suggestions");
+
+
+        searchInputEvent.addEventListener('input', () => {
+            // console.log(dummyData);
+
+            clearTimeout(debounceTimer);
+            const query = searchInputEvent.value;
+            console.log(query);
+
+            if (!query) {
+                suggestionArea.innerHTML = "";
+                return;
+            }
+            debounceTimer = setTimeout(async () => {
+
+
+
+                const data = await searchSuggestions(query);
+                if (!data) return;
+                console.log(data.items);
+
+                const suggestionResults = data.items.slice(0, maxSuggestionResults);
+
+                suggestionArea.innerHTML = "";
+                suggestionResults.forEach(title => {
+                    const li = document.createElement("li");
+                    li.textContent = title.volumeInfo.title;
+                    suggestionArea.appendChild(li);
+                });
+
+            }, setDebounceTime);
+
+        });
+
+
+        // 以下BOOKSAPIーーーーーーーーーーーーーーーーーーーー
+        async function searchSuggestions(query) {
+            // const query = 'プログラム';
+            const SearchKeyword = encodeURIComponent(`${query}`);
+            const url = `https://www.googleapis.com/books/v1/volumes?q=${SearchKeyword}&key=${apikey}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                console.log(data);
+
+                if (!data.items || data.items.length === 0) return null;
+                return data;
+
+            } catch (error) {
+                console.error(`getPreviewUrlエラー:`, error);
+                return null;
+            }
+        }
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>

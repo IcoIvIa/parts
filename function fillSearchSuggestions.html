@@ -60,6 +60,27 @@
             document.querySelector(`input[data-suggestion="${key}"]`).value = dummySearchResults[0][key];
         }
     })
+
+     /**
+     * 指定したIDの要素にクリックイベントを登録し、検索候補をinputに自動入力する。
+     * 
+     *
+     * @param {string} clickedId - クリックイベントを設定する要素のid属性値
+     * @param {Array<Object>} arraySearchResults - 検索結果の配列（各要素はdata-suggestionの値をキーに持つオブジェクト）
+     * @returns {void}
+     */
+    function fillSearchSuggestions(clickedId,arraySearchResults) {
+        document.getElementById(`${clickedId}`).addEventListener('click', () => {
+
+        document.querySelectorAll('input[data-suggestion]').forEach(input => {
+            input.value = "";
+        });
+
+        for (const key in arraySearchResults[0]) {
+            document.querySelector(`input[data-suggestion="${key}"]`).value = arraySearchResults[0][key];
+        }
+    })
+    }
 </script>
 
 </html>
