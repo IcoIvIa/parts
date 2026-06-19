@@ -7,3 +7,13 @@ js/
 ├── SearchResultView.js
 ├── BookFormFiller.js
 └── SearchController.js
+
+
+下記に変更
+
+SearchController（状態を一元管理する）
+  ├─ this.state = { query, results, page, isLoading, requestId }
+  ├─ setState(newState) — 状態を更新し、関係するViewに再描画指示
+  ├─ SuggestionView（受け取った状態を描画）
+  ├─ SearchResultView（受け取った状態を描画するだけ、かつ無限スクロールの監視を持つ）
+  └─ BooksApi（変更なし、データ取得のみ）
