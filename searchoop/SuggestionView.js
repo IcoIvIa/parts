@@ -2,12 +2,14 @@
 
 export default class SuggestionView {
 
-    constructor(booksApi, suggestionArea) {
+    constructor(booksApi, suggestionArea, onRendered) {
         this.booksApi = booksApi;
         this.suggestionArea = suggestionArea;
+        this.onRendered = onRendered;
         this.maxSuggestionResults = 2;
         this.debounceTime = 1000;
         this.debounceTimer = null;
+        this.currentQuery = null;
     }
 
     view(query) {
@@ -20,13 +22,18 @@ export default class SuggestionView {
 
         this.debounceTimer = setTimeout(async () => {
 
+            this.currentQuery = query;
+
             const items = await this.booksApi.search(query);
-            if (!items) return;
+            if(!items) return;
             // console.log(items);
+
+            if(query !== this.currentQuery) return;
 
             const suggestionResults = items.slice(0, this.maxSuggestionResults);
 
             this.renderList(suggestionResults);
+            this.onRendered(suggestionResults);
             
         }, this.debounceTime);
     }

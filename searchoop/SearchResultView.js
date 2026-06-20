@@ -1,11 +1,11 @@
 "use strict";
- 
+
 export default class SearchResultView {
- 
+
     constructor(searchResultArea) {
         this.searchResultArea = searchResultArea;
     }
- 
+
     render(items) {
         this.searchResultArea.innerHTML = "";
         items.forEach(item => {

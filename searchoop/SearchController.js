@@ -12,21 +12,33 @@ class SearchController {
         this.suggestionArea = document.getElementById("suggestions");
         this.searchResultArea = document.getElementById("searchResultView");
 
-        this.suggestionView = new SuggestionView(this.booksApi, this.suggestionArea);
+        this.suggestionView = new SuggestionView(
+            this.booksApi,
+            this.suggestionArea,
+            (results) => this.setState({ suggestions: results })
+            // function (results) {
+            // return this.setState({ suggestions: results });
+            // }　の短縮系
+        );
         this.searchResultView = new SearchResultView(this.searchResultArea);
 
         this.state = {
             query: "",
             results: [],
+            suggestions: [],
             page: 0,
             isLoading: false,
             requestId: 0
         };
     }
 
-    setState(partialState) {
-        this.state = { ...this.state, ...partialState };
-        this.searchResultView.render(this.state.results);
+    setState(stateChanges) {
+        this.state = { ...this.state, ...stateChanges };
+        if ("results" in stateChanges) {
+            this.searchResultView.render(this.state.results);
+        }
+        if ("suggestions" in stateChanges) {
+        }
     }
 
     init() {
