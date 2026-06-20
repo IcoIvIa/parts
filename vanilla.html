@@ -10,10 +10,23 @@
 
 <input type="text" id="searchInput" placeholder="検索">
 <button id="searchButton">検索</button>
-<ul id="suggestions"></ul>
+<div>-----サジェスト-----</div>
+    <ul id="suggestions"></ul>
 
-<p>検索結果</p>
-<div id="searchResultView"></div>
+
+<div>-----検索結果-----</div>
+    <div id="searchResultView"></div>
+    <div id="scrollSentinel"></div><!-- 自動スクロールの際に利用（現在未使用） -->
+    <button id="loadMoreButton">もっと見る</button>
+
+<div>-----結果詳細-----</div>
+    <div id="searchResultDetails"></div>
+
+<div>-----仮の登録フォーム-----</div>
+
+    <div>タイトル :<input type="text" name="" id="" data-suggestion="title"></div>
+    <div>ISBN :<input type="text" name="" id="" data-suggestion="isbn"></div>
+    <div>著者 :<input type="text" name="" id="" data-suggestion="author"></div>
 
 <!-- APIの読み込み必須 -->
 <script type="module" src="/searchoop/SearchController.js">

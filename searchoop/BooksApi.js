@@ -5,10 +5,11 @@ export default class BooksApi {
     constructor(apiKey) {
         this.apiKey = apiKey;
         this.baseUrl = "https://www.googleapis.com/books/v1/volumes";
+        this.itemsPerPage = 10;
     }
 
     createUrl(query, startIndex = 0) {
-        return `${this.baseUrl}?q=${encodeURIComponent(query)}&startIndex=${startIndex}&key=${this.apiKey}`;
+        return `${this.baseUrl}?q=${encodeURIComponent(query)}&startIndex=${startIndex}&maxResults=${this.itemsPerPage}&key=${this.apiKey}`;
     }
 
     async search(query, startIndex = 0) {
