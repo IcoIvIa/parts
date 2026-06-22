@@ -3,6 +3,7 @@ import { apikey } from "../config.js"
 import BooksApi from "./BooksApi.js";
 import SuggestionView from "./SuggestionView.js";
 import BookResultView from "./BookResultView.js";
+import BookDetailsView from "./BookDetailsView.js";
 import ButtonTrigger from "./ButtonTrigger.js";
 
 class SearchController {
@@ -13,18 +14,32 @@ class SearchController {
         this.suggestionArea = document.getElementById("suggestions");
         this.searchResultArea = document.getElementById("searchResultView");
         this.loadMoreButton = document.getElementById("loadMoreButton");
+        this.searchResultDetails = document.getElementById("searchResultDetails");
 
         this.suggestionView = new SuggestionView(
             this.booksApi,
             this.suggestionArea,
-            (results) => this.setState({ suggestions: results })
-            // function (results) {
-            // return this.setState({ suggestions: results });
+            // onRendered: 描画されたサジェスト候補(本のデータの配列)を受け取る
+            (suggestionItems) => this.setState({ suggestions: suggestionItems }),
+            // function (suggestionItems) {
+            // return this.setState({ suggestions: suggestionItems });
             // }　の短縮系
+            // onSuggestionSelected: クリックされた候補のタイトル(文字列)を受け取る
+            (selectedTitle) => {
+                this.searchInput.value = selectedTitle;
+                this.search();
+            }
         );
 
-        const trigger = new ButtonTrigger(this.loadMoreButton, () => this.loadMore());
-        this.searchResultView = new BookResultView(this.searchResultArea, trigger);
+        this.detailsView = new BookDetailsView(this.searchResultDetails);
+
+        const loadMoreTrigger = new ButtonTrigger(this.loadMoreButton, () => this.loadMore());
+        this.searchResultView = new BookResultView(
+            this.searchResultArea,
+            loadMoreTrigger,
+            // onResultSelected: クリックされた検索結果の項目(本のデータ全体)を受け取る
+            (selectedItem) => this.showDetails(selectedItem)
+        );
 
         this.state = {
             query: "",
@@ -35,6 +50,22 @@ class SearchController {
             requestId: 0
         };
     }
+
+    showDetails(selectedItem) {
+            this.searchResultDetails.innerHTML ="";
+
+            const data = [
+                `タイトル: ${selectedItem.volumeInfo.title ?? "なし"}`,
+                `著者: ${selectedItem.volumeInfo.authors?.join(", ") ?? "なし"}`,
+                `出版社: ${selectedItem.volumeInfo.publisher ?? "なし"}`
+            ];
+
+            data.forEach(text => {
+                const p = document.createElement("p");
+                p.textContent = text;
+                this.searchResultDetails.appendChild(p)
+            });
+        }
 
     setState(stateChanges) {
         this.state = { ...this.state, ...stateChanges };

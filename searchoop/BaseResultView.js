@@ -1,18 +1,19 @@
 "use strict";
- 
+
 export default class BaseResultView {
- 
-    constructor(resultArea, trigger) {
+
+    constructor(resultArea, loadMoreTrigger, onResultSelected) {
         this.resultArea = resultArea;
-        this.trigger = trigger;
+        this.loadMoreTrigger = loadMoreTrigger;
+        this.onResultSelected = onResultSelected;
     }
- 
+
     render(items) {
         this.resultArea.innerHTML = "";
         this.appendItems(items);
-        this.trigger.reset();
+        this.loadMoreTrigger.reset();
     }
- 
+
     appendItems(items) {
         items.forEach(item => {
             const li = this.createListItem(item);

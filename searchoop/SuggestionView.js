@@ -2,10 +2,11 @@
 
 export default class SuggestionView {
 
-    constructor(booksApi, suggestionArea, onRendered) {
+    constructor(booksApi, suggestionArea, onRendered, onSuggestionSelected) {
         this.booksApi = booksApi;
         this.suggestionArea = suggestionArea;
         this.onRendered = onRendered;
+        this.onSuggestionSelected = onSuggestionSelected;
         this.maxSuggestionResults = 2;
         this.debounceTime = 1000;
         this.debounceTimer = null;
@@ -43,7 +44,11 @@ export default class SuggestionView {
             items.forEach(item => {
                 const li = document.createElement("li");
                 li.textContent = item.volumeInfo.title;
+                li.addEventListener("click", ()=>{
+                    this.onSuggestionSelected(item.volumeInfo.title);
+                })
                 this.suggestionArea.appendChild(li);
+
             });
         }
 }
