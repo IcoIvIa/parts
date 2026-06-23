@@ -3,11 +3,15 @@ import BaseDetailsView from "./BaseDetailsView.js";
 
 export default class BookDetailsView extends BaseDetailsView {
 
-    createDetailLines(item) {
+    createDetailLines(detailItem) {
+        const identifiers = detailItem.volumeInfo.industryIdentifiers ?? [];
+        const isbn13 = identifiers.find(id => id.type === "ISBN_13");
+
         return [
-            `タイトル: ${item.volumeInfo.title ?? "なし"}`,
-            `著者: ${item.volumeInfo.authors?.join(", ") ?? "なし"}`,
-            `出版社: ${item.volumeInfo.publisher ?? "なし"}`
+            `タイトル: ${detailItem.volumeInfo.title ?? "なし"}`,
+            `著者: ${detailItem.volumeInfo.authors?.join(", ") ?? "なし"}`,
+            `出版社: ${detailItem.volumeInfo.publisher ?? "なし"}`,
+            `ISBN: ${isbn13?.identifier ?? "なし"}`
         ];
     }
 }

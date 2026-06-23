@@ -19,7 +19,6 @@ class SearchController {
         this.suggestionView = new SuggestionView(
             this.booksApi,
             this.suggestionArea,
-            // onRendered: 描画されたサジェスト候補(本のデータの配列)を受け取る
             (suggestionItems) => this.setState({ suggestions: suggestionItems }),
             // function (suggestionItems) {
             // return this.setState({ suggestions: suggestionItems });
@@ -38,7 +37,7 @@ class SearchController {
             this.searchResultArea,
             loadMoreTrigger,
             // onResultSelected: クリックされた検索結果の項目(本のデータ全体)を受け取る
-            (selectedItem) => this.showDetails(selectedItem)
+            (selectedItem) => this.detailsView.render(selectedItem)
         );
 
         this.state = {
@@ -49,23 +48,8 @@ class SearchController {
             isLoading: false,
             requestId: 0
         };
+
     }
-
-    showDetails(selectedItem) {
-            this.searchResultDetails.innerHTML ="";
-
-            const data = [
-                `タイトル: ${selectedItem.volumeInfo.title ?? "なし"}`,
-                `著者: ${selectedItem.volumeInfo.authors?.join(", ") ?? "なし"}`,
-                `出版社: ${selectedItem.volumeInfo.publisher ?? "なし"}`
-            ];
-
-            data.forEach(text => {
-                const p = document.createElement("p");
-                p.textContent = text;
-                this.searchResultDetails.appendChild(p)
-            });
-        }
 
     setState(stateChanges) {
         this.state = { ...this.state, ...stateChanges };
