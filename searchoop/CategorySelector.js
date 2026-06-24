@@ -14,6 +14,12 @@ export default class CategorySelector {
                 this.onCategoryChanged(category);
             });
         });
+
+        //  初期表示時、チェック済みのラジオボタインに合わせて表示エリアを揃える
+        const checkedRadio = Array.from(this.categoryRadios).find(radio => radio.checked);
+        if (checkedRadio) {
+            this.showFieldArea(checkedRadio.dataset.category);
+        }
     }
 
     showFieldArea(category) {
