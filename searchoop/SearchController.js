@@ -15,6 +15,7 @@ class SearchController {
         this.searchResultArea = document.getElementById("searchResultView");
         this.loadMoreButton = document.getElementById("loadMoreButton");
         this.searchResultDetails = document.getElementById("searchResultDetails");
+        this.dataSelectedfield = document.querySelectorAll('[data-selectedfield]');
 
         this.suggestionView = new SuggestionView(
             this.booksApi,
@@ -26,7 +27,7 @@ class SearchController {
             // onSuggestionSelected: クリックされた候補のタイトル(文字列)を受け取る
             (selectedTitle) => {
                 this.searchInput.value = selectedTitle;
-                this.search();
+                this.handleSearch();
             }
         );
 
@@ -46,8 +47,11 @@ class SearchController {
             suggestions: [],
             page: 0,
             isLoading: false,
-            requestId: 0
+            requestId: 0,
+            selectedField: "",
         };
+
+
 
     }
 
@@ -66,21 +70,34 @@ class SearchController {
 
     init() {
         this.searchButton.addEventListener("click", () => {
-            this.search();
+            this.handleSearch();
         });
 
         this.searchInput.addEventListener("input", () => {
             const query = this.searchInput.value.trim();
-            this.suggestionView.view(query);
+            const selectedField = this.state.selectedField;
+            this.suggestionView.view(query , selectedField);
         });
+
+        this.dataSelectedfield.forEach(radio => {
+            radio.addEventListener('change', (e)=> {
+                const selected = e.target.dataset.selectedfield;
+                this.state.selectedField = selected;
+
+                // fordebug
+                // console.log(selected);
+                // console.log(`これはクラス内のステートです上記と一致${this.state.selectedField}`)
+            })
+        });
+
     }
 
-    async search() {
+    async handleSearch() {
         const query = this.searchInput.value.trim();
         if (!query) return;
 
         const requestId = ++this.state.requestId;
-        const books = await this.booksApi.search(query);
+        const books = await this.booksApi.fetchBooks(this.state.selectedField, query);
 
         if (requestId !== this.state.requestId) return;
 
@@ -95,7 +112,7 @@ class SearchController {
 
         const nextPage = this.state.page + 1;
         const startIndex = nextPage * this.booksApi.itemsPerPage;
-        const newBooks = await this.booksApi.search(this.state.query, startIndex);
+        const newBooks = await this.booksApi.fetchBooks(this.state.selectedField, this.state.query, startIndex);
 
         this.setState({
             results: [...this.state.results, ...newBooks],

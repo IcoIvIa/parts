@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <title>IGDB検索(アプリ側テスト)</title>
+    </head>
+    <body>
+        <h1>ゲーム検索(別オリジンからのテスト)</h1>
+        <p>CORSの許可設定が効いているかどうかを確認するためのページです。</p>
+
+        <input type="text" id="search-input" value="" />
+        <button id="search-button">検索</button>
+
+        <div id="output"></div>
+
+        <script>
+            //API呼び出し部分
+            async function searchGames(keyword) {
+                const res = await fetch(
+                    'https://testproject.stackgametest.workers.dev/api/igdb/games/search',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            keyword,
+                        }),
+                    },
+                );
+
+                return res.json();
+            }
+
+            function renderGames(games) {
+                const outputEl = document.getElementById('output');
+                outputEl.innerHTML = '';
+
+                // CORSやサーバー側でエラーが起きた場合、games は配列ではなくエラー情報になる
+                if (!Array.isArray(games)) {
+                    outputEl.textContent = 'エラーが発生しました: ' + JSON.stringify(games);
+                    return;
+                }
+
+                if (!games.length) {
+                    outputEl.textContent = '見つかりませんでした。';
+                    return;
+                }
+
+                //検索結果一覧
+                for (const game of games) {
+                    const card = document.createElement('div');
+                    card.style.marginBottom = '16px';
+
+                    //ゲームのサムネ表示、URL取得はgame.imageUrl
+                    if (game.imageUrl) {
+                        const img = document.createElement('img');
+                        img.src = game.imageUrl;
+                        card.appendChild(img);
+                        img.style.width = '50%';
+                    }
+
+                    //ゲームのタイトル表示、取得はgame.title
+                    const title = document.createElement('p');
+                    title.textContent = game.title;
+                    card.appendChild(title);
+
+                    outputEl.appendChild(card);
+                }
+            }
+
+            //検索実行関数
+            async function handleSearch() {
+                const keyword = document.getElementById('search-input').value.trim();
+                if (!keyword) return;
+
+                document.getElementById('output').textContent = '検索中...';
+                //検索ワードを取得してAPI呼び出し
+                try {
+                    const games = await searchGames(keyword);
+                    renderGames(games);
+                } catch (err) {
+                    // CORSでブロックされた場合、ここで TypeError: Failed to fetch のような例外になる
+                    document.getElementById('output').textContent =
+                        '通信エラー(CORSの可能性があります): ' + err.message;
+                }
+            }
+
+            document.getElementById('search-button').addEventListener('click', handleSearch);
+            document.getElementById('search-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') handleSearch();
+            });
+        </script>
+    </body>
+</html>

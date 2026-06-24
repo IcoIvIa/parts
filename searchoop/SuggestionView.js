@@ -11,9 +11,10 @@ export default class SuggestionView {
         this.debounceTime = 1000;
         this.debounceTimer = null;
         this.currentQuery = null;
+
     }
 
-    view(query) {
+    view(query , selectedField) {
         clearTimeout(this.debounceTimer);
 
         if (!query) {
@@ -25,7 +26,7 @@ export default class SuggestionView {
 
             this.currentQuery = query;
 
-            const items = await this.booksApi.search(query);
+            const items = await this.booksApi.fetchBooks(selectedField, query);
             if(!items) return;
             // console.log(items);
 

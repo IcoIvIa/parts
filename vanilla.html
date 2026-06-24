@@ -5,32 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
 <body>
-    
 
 <input type="text" id="searchInput" placeholder="検索">
 <button id="searchButton">検索</button>
-<div>-----サジェスト-----</div>
-    <ul id="suggestions"></ul>
 
+<input type="radio" id="radioBook" name="searchCategoryRadios" checked />
+<label for="radioBook">本</label>
+
+<input type="radio" id="radioGame" name="searchCategoryRadios" />
+<label for="radioGame">ゲーム</label>
+
+<div data-searchfield="book">
+    <input type="radio" id="searchBookTitle" name="searchBookField" data-selectedfield="title"/>
+    <label for="searchBookTitle">タイトル検索</label>
+
+    <input type="radio" id="searchBookIsbn" name="searchBookField" data-selectedfield="isbn"/>
+    <label for="searchBookIsbn">ISBN検索</label>
+
+    <input type="radio" id="searchBookAuthor" name="searchBookField" data-selectedfield="author"/>
+    <label for="searchBookAuthor">著者検索</label>
+</div>
+
+<div data-searchfield="game">
+    <input type="radio" id="searchGameTitle" name="searchGameField" data-selectedfield="gameTitle"/>
+    <label for="searchGameTitle">これはゲーム用ですタイトル検索</label>
+
+    <input type="radio" id="searchGameIsbn" name="searchGameField" data-selectedfield="mitei"/>
+    <label for="searchGameIsbn">ISBN検索</label>
+
+    <input type="radio" id="searchGameAuthor" name="searchGameField" data-selectedfield="mitei2"/>
+    <label for="searchGameAuthor">著者検索</label>
+</div>
+
+<div>-----サジェスト-----</div>
+<ul id="suggestions"></ul>
 
 <div>-----検索結果-----</div>
-    <div id="searchResultView"></div>
-    <div id="scrollSentinel"></div><!-- 自動スクロールの際に利用（現在未使用） -->
-    <button id="loadMoreButton">もっと見る</button>
+<div id="searchResultView"></div>
+<div id="scrollSentinel"></div><!-- 自動スクロールの際に利用（現在未使用） -->
+<button id="loadMoreButton">もっと見る</button>
 
 <div>-----結果詳細-----</div>
-    <div id="searchResultDetails"></div>
+<div id="searchResultDetails"></div>
 
 <div>-----仮の登録フォーム-----</div>
 
-    <div>タイトル :<input type="text" name="" id="" data-suggestion="title"></div>
-    <div>ISBN :<input type="text" name="" id="" data-suggestion="isbn"></div>
-    <div>著者 :<input type="text" name="" id="" data-suggestion="author"></div>
+<div>タイトル :<input type="text" data-suggestion="title"></div>
+<div>ISBN :<input type="text" data-suggestion="isbn"></div>
+<div>著者 :<input type="text" data-suggestion="author"></div>
 
 <!-- APIの読み込み必須 -->
-<script type="module" src="/searchoop/SearchController.js">
+<script type="module" src="/searchoop/SearchController.js"></script>
 
+<script>
+    const searchCategory = document.querySelectorAll('input[name="searchCategoryRadios"]');
+    const searchFieldAreas = document.querySelectorAll('[data-searchfield]');
+    const bookSearchFieldsArea = document.querySelector('[data-searchfield="book"]');
+    const gameSearchFieldsArea = document.querySelector('[data-searchfield="game"]');
+    searchFieldAreas.forEach(element => {
+        element.classList.add('hidden');
+    });
+
+    bookSearchFieldsArea.classList.remove('hidden');
+
+    searchCategory.forEach(type => {
+        type.addEventListener('change', () => {
+
+            switch (type.id) {
+                case "radioBook":
+                    bookSearchFieldsArea.classList.remove('hidden');
+                    gameSearchFieldsArea.classList.add('hidden');
+                    break;
+
+                case "radioGame":
+                    gameSearchFieldsArea.classList.remove('hidden');
+                    bookSearchFieldsArea.classList.add('hidden');
+                    break;
+            }
+
+        });
+    });
 </script>
+
 </body>
 </html>
