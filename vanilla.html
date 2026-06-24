@@ -17,10 +17,10 @@
 <input type="text" id="searchInput" placeholder="検索">
 <button id="searchButton">検索</button>
 
-<input type="radio" id="radioBook" name="searchCategoryRadios" checked />
+<input type="radio" id="radioBook" name="searchCategoryRadios" data-category="book" checked />
 <label for="radioBook">本</label>
 
-<input type="radio" id="radioGame" name="searchCategoryRadios" />
+<input type="radio" id="radioGame" name="searchCategoryRadios" data-category="game" />
 <label for="radioGame">ゲーム</label>
 
 <div data-searchfield="book">
@@ -64,36 +64,6 @@
 
 <!-- APIの読み込み必須 -->
 <script type="module" src="/searchoop/SearchController.js"></script>
-
-<script>
-    const searchCategory = document.querySelectorAll('input[name="searchCategoryRadios"]');
-    const searchFieldAreas = document.querySelectorAll('[data-searchfield]');
-    const bookSearchFieldsArea = document.querySelector('[data-searchfield="book"]');
-    const gameSearchFieldsArea = document.querySelector('[data-searchfield="game"]');
-    searchFieldAreas.forEach(element => {
-        element.classList.add('hidden');
-    });
-
-    bookSearchFieldsArea.classList.remove('hidden');
-
-    searchCategory.forEach(type => {
-        type.addEventListener('change', () => {
-
-            switch (type.id) {
-                case "radioBook":
-                    bookSearchFieldsArea.classList.remove('hidden');
-                    gameSearchFieldsArea.classList.add('hidden');
-                    break;
-
-                case "radioGame":
-                    gameSearchFieldsArea.classList.remove('hidden');
-                    bookSearchFieldsArea.classList.add('hidden');
-                    break;
-            }
-
-        });
-    });
-</script>
 
 </body>
 </html>

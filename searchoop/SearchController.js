@@ -1,14 +1,17 @@
 "use strict";
 import { apikey } from "../config.js"
 import BooksApi from "./BooksApi.js";
+import GamesApi from "./GamesApi.js";
 import SuggestionView from "./SuggestionView.js";
 import BookResultView from "./BookResultView.js";
 import BookDetailsView from "./BookDetailsView.js";
 import ButtonTrigger from "./ButtonTrigger.js";
+import CategorySelector from "./CategorySelector.js";
 
 class SearchController {
     constructor(apikey) {
         this.booksApi = new BooksApi(apikey);
+        this.gamesApi = new GamesApi();
         this.searchButton = document.getElementById("searchButton");
         this.searchInput = document.getElementById("searchInput");
         this.suggestionArea = document.getElementById("suggestions");
@@ -16,6 +19,8 @@ class SearchController {
         this.loadMoreButton = document.getElementById("loadMoreButton");
         this.searchResultDetails = document.getElementById("searchResultDetails");
         this.dataSelectedfield = document.querySelectorAll('[data-selectedfield]');
+        this.categoryRadios = document.querySelectorAll('input[name="searchCategoryRadios"]');
+        this.searchFieldAreas = document.querySelectorAll('[data-searchfield]');
 
         this.suggestionView = new SuggestionView(
             this.booksApi,
@@ -41,6 +46,12 @@ class SearchController {
             (selectedItem) => this.detailsView.render(selectedItem)
         );
 
+        this.categorySelector = new CategorySelector(
+            this.categoryRadios,
+            this.searchFieldAreas,
+            (category) => this.setState({ searchCategory: category })
+        );
+
         this.state = {
             query: "",
             results: [],
@@ -48,6 +59,7 @@ class SearchController {
             page: 0,
             isLoading: false,
             requestId: 0,
+            searchCategory: "book",
             selectedField: "",
         };
 
@@ -76,11 +88,11 @@ class SearchController {
         this.searchInput.addEventListener("input", () => {
             const query = this.searchInput.value.trim();
             const selectedField = this.state.selectedField;
-            this.suggestionView.view(query , selectedField);
+            this.suggestionView.view(query, selectedField);
         });
 
         this.dataSelectedfield.forEach(radio => {
-            radio.addEventListener('change', (e)=> {
+            radio.addEventListener('change', (e) => {
                 const selected = e.target.dataset.selectedfield;
                 this.state.selectedField = selected;
 
@@ -97,11 +109,22 @@ class SearchController {
         if (!query) return;
 
         const requestId = ++this.state.requestId;
-        const books = await this.booksApi.fetchBooks(this.state.selectedField, query);
 
-        if (requestId !== this.state.requestId) return;
+        if (this.state.searchCategory === "book") {
+            const books = await this.booksApi.fetchBooks(this.state.selectedField, query);
+            if (requestId !== this.state.requestId) return;
+            this.setState({ query, results: books, page: 0 });
+        }
 
-        this.setState({ query, results: books, page: 0 });
+        else if(this.state.searchCategory === "game") {
+            const games = await this.gamesApi.fetchGames(query);
+            console.log(games)
+        }
+
+
+
+
+
     }
 
     async loadMore() {

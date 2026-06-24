@@ -26,7 +26,7 @@ export default class BooksApi {
 
     async fetchBooks(selectedField, query, startIndex = 0,) {
         // for debug
-        console.log(selectedField);
+        // console.log(selectedField);
         
         const url = this.createUrl(selectedField, query, startIndex,);
 
