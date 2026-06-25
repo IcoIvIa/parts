@@ -54,7 +54,7 @@ class SearchController {
         this.searchResultViewGames = new GameResultView(
             this.searchResultArea,
             loadMoreTrigger,
-            // onResultSelected: クリックされた検索結果の項目(ゲームデータ全体)を受け取る
+            // onResultSelected: クリックされた検索結果の項目(ゲームのデータ)を受け取る
             (selectedItem) => this.detailsViewGame.render(selectedItem)
         );
 
@@ -76,9 +76,6 @@ class SearchController {
             selectedField: "",
         };
     }
-
-
-
 
 
     setState(stateChanges) {
