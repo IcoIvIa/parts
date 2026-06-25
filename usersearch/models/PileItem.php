@@ -2,11 +2,62 @@
 /**
  * 「積み」1件（本・ゲーム1冊/1本）を表す型。
  * 元のテーブルの列名（本ゲーム名、サムネURL等）とは独立させて、
- * アプリ側で使いやすい名前にしている。
+ * アプリ側で使いやすい名前にする。
  */
 
  class PileItem
 {
     private int $id;
     private int $userId;
+    private string $title;
+    private ?string $thumbnailUrl;
+    private ?string $releaseDate;
+    private string $registeredAt;
+
+        public function __construct(
+        int $id,
+        int $userId,
+        string $title,
+        ?string $thumbnailUrl,
+        ?string $releaseDate,
+        string $registeredAt
+    ) {
+        $this->id = $id;
+        $this->userId = $userId;
+        $this->title = $title;
+        $this->thumbnailUrl = $thumbnailUrl;
+        $this->releaseDate = $releaseDate;
+        $this->registeredAt = $registeredAt;
+    }
+
+        public function getId(): int
+    {
+        return $this->id;
+    }
+ 
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+ 
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+ 
+    public function getThumbnailUrl(): ?string
+    {
+        return $this->thumbnailUrl;
+    }
+ 
+    public function getReleaseDate(): ?string
+    {
+        return $this->releaseDate;
+    }
+ 
+    public function getRegisteredAt(): string
+    {
+        return $this->registeredAt;
+    }
+ 
 }
