@@ -68,9 +68,6 @@ export default class SuggestionView {
                 this.suggestionArea.appendChild(li);
             }
 
-
-
-
         });
     }
 }

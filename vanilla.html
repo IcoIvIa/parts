@@ -58,9 +58,13 @@
 
 <div>-----仮の登録フォーム-----</div>
 
-<div>タイトル :<input type="text" data-suggestion="title"></div>
-<div>ISBN :<input type="text" data-suggestion="isbn"></div>
-<div>著者 :<input type="text" data-suggestion="author"></div>
+<div>タイトル :<input type="text" data-suggestion="title" required></div>
+<div>ISBN （ゲームの場合不要）:<input type="text" data-suggestion="isbn"></div>
+<div>著者 （ゲームの場合不要）:<input type="text" data-suggestion="author"></div>
+<div>パブリッシャー :<input type="text" data-suggestion="publisher"></div>
+<div>画像（URL） :<input type="text" data-suggestion="imageUrl"></div>
+
+<input type="submit" value="登録（動きません）">
 
 <!-- APIの読み込み必須 -->
 <script type="module" src="/searchoop/SearchController.js"></script>

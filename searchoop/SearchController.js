@@ -23,6 +23,7 @@ class SearchController {
         this.dataSelectedfield = document.querySelectorAll('[data-selectedfield]');
         this.categoryRadios = document.querySelectorAll('input[name="searchCategoryRadios"]');
         this.searchFieldAreas = document.querySelectorAll('[data-searchfield]');
+        this.dataSuggestions = document.querySelectorAll('input[data-suggestion]');
 
         this.suggestionView = new SuggestionView(
             this.booksApi,
@@ -39,8 +40,8 @@ class SearchController {
             }
         );
 
-        this.detailsViewBook = new BookDetailsView(this.searchResultDetails);
-        this.detailsViewGame = new GameDetailsView(this.searchResultDetails);
+        this.detailsViewBook = new BookDetailsView(this.searchResultDetails, this.dataSuggestions);
+        this.detailsViewGame = new GameDetailsView(this.searchResultDetails, this.dataSuggestions);
 
         const loadMoreTrigger = new ButtonTrigger(this.loadMoreButton, () => this.loadMore());
 
