@@ -1,9 +1,12 @@
 "use strict";
 
+// ファイルを増やさないために、サジェスト表示は検索カテゴリー別にクラスを分けないようにしました。本とゲームのサジェスト表示のロジックがあります。
+
 export default class SuggestionView {
 
-    constructor(booksApi, suggestionArea, onRendered, onSuggestionSelected) {
+    constructor(booksApi, gamesApi, suggestionArea, onRendered, onSuggestionSelected) {
         this.booksApi = booksApi;
+        this.gamesApi = gamesApi;
         this.suggestionArea = suggestionArea;
         this.onRendered = onRendered;
         this.onSuggestionSelected = onSuggestionSelected;
@@ -14,7 +17,7 @@ export default class SuggestionView {
 
     }
 
-    view(query , selectedField) {
+    view(query, selectedField, searchCategory) {
         clearTimeout(this.debounceTimer);
 
         if (!query) {
@@ -25,31 +28,49 @@ export default class SuggestionView {
         this.debounceTimer = setTimeout(async () => {
 
             this.currentQuery = query;
+            let items = ""
 
-            const items = await this.booksApi.fetchBooks(selectedField, query);
-            if(!items) return;
+            if (searchCategory === "book") {
+                items = await this.booksApi.fetchBooks(selectedField, query);
+                if (!items) return;
+            } else if (searchCategory === "game") {
+                items = await this.gamesApi.fetchGames(query);
+            }
             // console.log(items);
 
-            if(query !== this.currentQuery) return;
+            if (query !== this.currentQuery) return;
 
             const suggestionResults = items.slice(0, this.maxSuggestionResults);
 
-            this.renderList(suggestionResults);
+            this.renderList(suggestionResults, searchCategory);
             this.onRendered(suggestionResults);
-            
+
         }, this.debounceTime);
     }
 
-    renderList(items){
-    this.suggestionArea.innerHTML = "";
-            items.forEach(item => {
-                const li = document.createElement("li");
+    renderList(items, searchCategory) {
+        this.suggestionArea.innerHTML = "";
+        items.forEach(item => {
+            const li = document.createElement("li");
+
+            if (searchCategory === "book") {
                 li.textContent = item.volumeInfo.title;
-                li.addEventListener("click", ()=>{
+                li.addEventListener("click", () => {
                     this.onSuggestionSelected(item.volumeInfo.title);
                 })
                 this.suggestionArea.appendChild(li);
 
-            });
-        }
+            } else if (searchCategory === "game") {
+                li.textContent = item.title;
+                li.addEventListener("click", () => {
+                    this.onSuggestionSelected(item.title);
+                })
+                this.suggestionArea.appendChild(li);
+            }
+
+
+
+
+        });
+    }
 }

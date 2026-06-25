@@ -4,7 +4,9 @@ import BooksApi from "./BooksApi.js";
 import GamesApi from "./GamesApi.js";
 import SuggestionView from "./SuggestionView.js";
 import BookResultView from "./BookResultView.js";
+import GameResultView from "./GameResultView.js";
 import BookDetailsView from "./BookDetailsView.js";
+import GameDetailsView from "./GameDetailsView.js";
 import ButtonTrigger from "./ButtonTrigger.js";
 import CategorySelector from "./CategorySelector.js";
 
@@ -24,6 +26,7 @@ class SearchController {
 
         this.suggestionView = new SuggestionView(
             this.booksApi,
+            this.gamesApi,
             this.suggestionArea,
             (suggestionItems) => this.setState({ suggestions: suggestionItems }),
             // function (suggestionItems) {
@@ -36,15 +39,24 @@ class SearchController {
             }
         );
 
-        this.detailsView = new BookDetailsView(this.searchResultDetails);
+        this.detailsViewBook = new BookDetailsView(this.searchResultDetails);
+        this.detailsViewGame = new GameDetailsView(this.searchResultDetails);
 
         const loadMoreTrigger = new ButtonTrigger(this.loadMoreButton, () => this.loadMore());
-        this.searchResultView = new BookResultView(
+
+        this.searchResultViewBooks = new BookResultView(
             this.searchResultArea,
             loadMoreTrigger,
             // onResultSelected: クリックされた検索結果の項目(本のデータ全体)を受け取る
-            (selectedItem) => this.detailsView.render(selectedItem)
+            (selectedItem) => this.detailsViewBook.render(selectedItem)
         );
+        this.searchResultViewGames = new GameResultView(
+            this.searchResultArea,
+            loadMoreTrigger,
+            // onResultSelected: クリックされた検索結果の項目(ゲームデータ全体)を受け取る
+            (selectedItem) => this.detailsViewGame.render(selectedItem)
+        );
+
 
         this.categorySelector = new CategorySelector(
             this.categoryRadios,
@@ -62,22 +74,36 @@ class SearchController {
             searchCategory: "book",
             selectedField: "",
         };
-
-
-
     }
+
+
+
+
 
     setState(stateChanges) {
         this.state = { ...this.state, ...stateChanges };
 
-        if ("results" in stateChanges) {
-            this.searchResultView.render(this.state.results);
+        if (this.state.searchCategory === "book") {
+            if ("results" in stateChanges) {
+                this.searchResultViewBooks.render(this.state.results);
+            }
+            if ("newResults" in stateChanges) {
+                this.searchResultViewBooks.appendItems(stateChanges.newResults);
+            }
+            if ("suggestions" in stateChanges) {
+            }
+        } else if (this.state.searchCategory === "game") {
+            if ("results" in stateChanges) {
+                this.searchResultViewGames.render(this.state.results);
+            }
+            if ("newResults" in stateChanges) {
+                this.searchResultViewGames.appendItems(stateChanges.newResults);
+            }
+            if ("suggestions" in stateChanges) {
+            }
         }
-        if ("newResults" in stateChanges) {
-            this.searchResultView.appendItems(stateChanges.newResults);
-        }
-        if ("suggestions" in stateChanges) {
-        }
+
+
     }
 
     init() {
@@ -88,7 +114,8 @@ class SearchController {
         this.searchInput.addEventListener("input", () => {
             const query = this.searchInput.value.trim();
             const selectedField = this.state.selectedField;
-            this.suggestionView.view(query, selectedField);
+            const searchCategory = this.state.searchCategory;
+            this.suggestionView.view(query, selectedField, searchCategory);
         });
 
         this.dataSelectedfield.forEach(radio => {
@@ -116,14 +143,13 @@ class SearchController {
             this.setState({ query, results: books, page: 0 });
         }
 
-        else if(this.state.searchCategory === "game") {
+        else if (this.state.searchCategory === "game") {
             const games = await this.gamesApi.fetchGames(query);
-            console.log(games)
+            this.setState({ query, results: games });
+
+            // fordebug
+            // console.log(games);
         }
-
-
-
-
 
     }
 

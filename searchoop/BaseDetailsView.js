@@ -9,10 +9,16 @@ export default class BaseDetailsView {
     render(item) {
         this.detailsArea.innerHTML = "";
         const lines = this.createDetailLines(item);
-        lines.forEach(text => {
-            const p = document.createElement("p");
-            p.textContent = text;
-            this.detailsArea.appendChild(p);
+        lines.forEach(line => {
+            if (line.imageUrl) {
+                const img = document.createElement("img");
+                img.src = line.imageUrl;
+                this.detailsArea.appendChild(img);
+            } else if (line.text) {
+                const p = document.createElement("p");
+                p.textContent = line.text;
+                this.detailsArea.appendChild(p);
+            }
         });
     }
  
