@@ -18,7 +18,7 @@ export default class BookDetailsView extends BaseDetailsView {
 
 getFormValues(detailItem) {
     // for debug
-    console.log(detailItem.volumeInfo.industryIdentifiers);
+    // console.log(detailItem.volumeInfo.industryIdentifiers);
     
     const identifiers = detailItem.volumeInfo.industryIdentifiers ?? [];
     const isbn13 = identifiers.find(id => id.type === "ISBN_13");
