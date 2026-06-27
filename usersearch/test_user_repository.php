@@ -1,7 +1,7 @@
 <pre>
 <?php
 
-require_once __DIR__ . '/UserRepository.php';
+require_once __DIR__ . '/repositories/UserRepository.php';
 
 // ====== ここをご自身のXAMPP環境に合わせて書き換えてください ======
 $host = 'localhost';

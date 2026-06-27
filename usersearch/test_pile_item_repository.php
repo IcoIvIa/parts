@@ -1,7 +1,7 @@
 <pre>
 <?php
 
-require_once __DIR__ . '/../repositories/PileItemRepository.php';
+require_once __DIR__ . '/repositories/PileItemRepository.php';
 
 // ====== ここをご自身のXAMPP環境に合わせて書き換えてください ======
 $host = 'localhost';
