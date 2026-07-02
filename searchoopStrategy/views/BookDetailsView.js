@@ -31,6 +31,7 @@ export default class BookDetailsView extends BaseDetailsView {
     /**
      * 登録フォームに入れる値（title/imageUrl/releaseDate）を作る。
      *data-suggestion=""の値と対応する形になります。
+     * (↓現在使用していない↓)
      * 注意: ISBN_13が登録されていない本の場合、isbnは空文字になる
      * （Google Books APIのデータ自体にISBN_13が無いケースがあるため）。
      *
