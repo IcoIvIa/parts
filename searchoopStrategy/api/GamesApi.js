@@ -18,7 +18,12 @@ export default class GamesApi {
                 }),
             },
         );
-        return res.json();
+        const data = await res.json();
+
+        // fordebug
+        // console.log(data)
+
+return data;
     }
 
 }

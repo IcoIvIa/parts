@@ -17,6 +17,8 @@ CREATE TABLE pile_items (
     thumbnail_url VARCHAR(500) NULL,
     release_date DATE NULL,
     registered_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    one_word_comment VARCHAR(255) NULL,
+    cleared_status TINYINT(2) NOT NULL DEFAULT 0,
     PRIMARY KEY (pile_item_id),
     CONSTRAINT fk_pile_items_user
         FOREIGN KEY (user_id) REFERENCES users (user_id)
@@ -45,11 +47,11 @@ INSERT INTO users (user_id, user_name, password, is_admin) VALUES
     (3, 'はなこ2号', 'dummy_password_3', 0),
     (4, 'ゆうた', 'dummy_password_4', 0);
 
-INSERT INTO pile_items (pile_item_id, user_id, title, thumbnail_url, release_date, registered_at) VALUES
-    (1, 1, 'ドラゴンクエストXI', 'https://example.com/dq11.jpg', '2017-07-29', NOW()),
-    (2, 1, 'ドラゴンクエストV', 'https://example.com/dq5.jpg',  '1992-09-27', NOW()),
-    (3, 1, 'ファイナルファンタジーVII', 'https://example.com/ff7.jpg', '1997-01-31', NOW()),
-    (4, 2, 'ドラゴンボールZ カカロット', 'https://example.com/kakarot.jpg', '2020-01-16', NOW());
+INSERT INTO pile_items (pile_item_id, user_id, title, thumbnail_url, release_date, registered_at, one_word_comment, cleared_status) VALUES
+    (1, 1, 'ドラゴンクエストXI', 'https://example.com/dq11.jpg', '2017-07-29', NOW(), '名作らしいので楽しみ', 0),
+    (2, 1, 'ドラゴンクエストV', 'https://example.com/dq5.jpg',  '1992-09-27', NOW(), NULL, 1),
+    (3, 1, 'ファイナルファンタジーVII', 'https://example.com/ff7.jpg', '1997-01-31', NOW(), 'リメイクより先に原作をやる', 2),
+    (4, 2, 'ドラゴンボールZ カカロット', 'https://example.com/kakarot.jpg', '2020-01-16', NOW(), NULL, 0);
 
 INSERT INTO comments (comment_id, content, author_user_id, pile_item_id, commented_at, is_reported) VALUES
     (1, '面白かったです！', 2, 1, NOW(), 0),

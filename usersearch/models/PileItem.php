@@ -13,6 +13,9 @@
     private ?string $thumbnailUrl;
     private ?string $releaseDate;
     private string $registeredAt;
+    private ?string $oneWordComment;
+    private int $clearedStatus;
+
 
         public function __construct(
         int $id,
@@ -20,7 +23,9 @@
         string $title,
         ?string $thumbnailUrl,
         ?string $releaseDate,
-        string $registeredAt
+        string $registeredAt,
+        ?string $oneWordComment,
+        int $clearedStatus
     ) {
         $this->id = $id;
         $this->userId = $userId;
@@ -28,6 +33,8 @@
         $this->thumbnailUrl = $thumbnailUrl;
         $this->releaseDate = $releaseDate;
         $this->registeredAt = $registeredAt;
+        $this->oneWordComment = $oneWordComment;
+        $this->clearedStatus = $clearedStatus;
     }
 
         public function getId(): int
@@ -58,6 +65,18 @@
     public function getRegisteredAt(): string
     {
         return $this->registeredAt;
+    }
+
+        public function getOneWordComment(): ?string
+    {
+        return $this->oneWordComment;
+    }
+    /**
+     * 0=未着手, 1=消化中, 2=消化済み
+     */
+    public function getClearedStatus(): int
+    {
+        return $this->clearedStatus;
     }
  
 }

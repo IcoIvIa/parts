@@ -29,8 +29,8 @@ export default class BookDetailsView extends BaseDetailsView {
     }
 
     /**
-     * 登録フォームに入れる値（title/isbn/author/publisher/imageUrl）を作る。
-     *
+     * 登録フォームに入れる値（title/imageUrl/releaseDate）を作る。
+     *data-suggestion=""の値と対応する形になります。
      * 注意: ISBN_13が登録されていない本の場合、isbnは空文字になる
      * （Google Books APIのデータ自体にISBN_13が無いケースがあるため）。
      *
@@ -38,15 +38,16 @@ export default class BookDetailsView extends BaseDetailsView {
      * @returns {{title: string, isbn: string, author: string, publisher: string, imageUrl: string}}
      */
     getFormValues(detailItem) {
-        const identifiers = detailItem.volumeInfo.industryIdentifiers ?? [];
-        const isbn13 = identifiers.find(id => id.type === "ISBN_13");
+        // const identifiers = detailItem.volumeInfo.industryIdentifiers ?? [];
+        // const isbn13 = identifiers.find(id => id.type === "ISBN_13");ISBNの保存が必要な場合に使用する。
 
         return {
             title: detailItem.volumeInfo.title ?? "",
-            isbn: isbn13?.identifier ?? "",
-            author: detailItem.volumeInfo.authors?.join(", ") ?? "",
-            publisher: detailItem.volumeInfo.publisher ?? "",
-            imageUrl: detailItem.volumeInfo.imageLinks?.thumbnail ?? ""
+            // isbn: isbn13?.identifier ?? "",
+            // author: detailItem.volumeInfo.authors?.join(", ") ?? "",
+            // publisher: detailItem.volumeInfo.publisher ?? "",
+            imageUrl: detailItem.volumeInfo.imageLinks?.thumbnail ?? "",
+            releaseDate: detailItem.releaseDate ??""
         };
     }
 }

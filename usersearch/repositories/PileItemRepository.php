@@ -22,7 +22,7 @@ class PileItemRepository implements PileItemRepositoryInterface
     }
 
     private const PILE_ITEMS_SELECT_ALL_SQL =
-            'SELECT pile_item_id, user_id, title, thumbnail_url, release_date, registered_at
+            'SELECT pile_item_id, user_id, title, thumbnail_url, release_date, registered_at, one_word_comment, cleared_status
             FROM pile_items ';
 
     #[Override]
@@ -102,7 +102,9 @@ class PileItemRepository implements PileItemRepositoryInterface
             title: $row['title'],
             thumbnailUrl: $row['thumbnail_url'],
             releaseDate: $row['release_date'],
-            registeredAt: $row['registered_at']
+            registeredAt: $row['registered_at'],
+            oneWordComment: $row['one_word_comment'],
+            clearedStatus: (int) $row['cleared_status']
         );
     }
 }
