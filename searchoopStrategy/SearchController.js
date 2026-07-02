@@ -190,9 +190,9 @@ class SearchController {
 
     // ーーーーーーーーーーーーーーー初期化ーーーーーーーーーーーーーーーーーーーーーーーーー
     init() {
-        this.searchButton.addEventListener("click", () => {
-            this.handleSearch();
-        });
+        // this.searchButton.addEventListener("click", () => {
+        //     this.handleSearch();
+        // });
 
         this.searchInput.addEventListener("input", () => {
             const query = this.searchInput.value.trim();

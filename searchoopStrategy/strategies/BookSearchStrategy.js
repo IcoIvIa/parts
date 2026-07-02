@@ -33,4 +33,8 @@ export default class BookSearchStrategy {
     async loadMore(query, selectedField, startIndex) {
         return this.api.fetchBooks(selectedField, query, startIndex);
     }
+
+    async suggestion(query, selectedField,){
+        return this.api.fetchBooks(query,selectedField);
+    }
 }
