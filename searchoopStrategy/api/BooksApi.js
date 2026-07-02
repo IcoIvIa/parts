@@ -5,7 +5,7 @@ export default class BooksApi {
     constructor(apiKey,) {
         this.apiKey = apiKey;
         this.baseUrl = "https://www.googleapis.com/books/v1/volumes";
-        this.itemsPerPage = 10;
+        this.itemsPerPage = 20;
     }
 
     // createUrl(query, startIndex = 0) {
